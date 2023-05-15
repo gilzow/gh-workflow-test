@@ -16,6 +16,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify label exists
+        shell: bash
+        run: |
+          if [[ "${{ env.LBL_MRKDWNPROSE }}" != $(gh label list --search "${{ env.LBL_MRKDWNPROSE }}" --json name -q '.[] | .name') ]]; then
+            echo "Label ${{ env.LBL_MRKDOWNPROSE }} doesn't exist so I need to create it."
+            gh label create "${{ env.LBL_MRKDOWNPROSE }}"
+          else
+            echo "Label ${{ env.LBL_MRKDOWNPROSE }} already exists so no need to create it."
+          fi
       - name: Add prose label
         shell: bash
         env:
