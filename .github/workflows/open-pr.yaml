@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add prose label
-        uses: actions-ecosystem/action-add-labels@v1
+        uses: actions/github-script@v6
         with:
-          labels: markdown/prose
+          script: | 
+            github.rest.issues.addLabels({
+              issue_number: context.event.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              label: ["markdown/prose"]
+            })
