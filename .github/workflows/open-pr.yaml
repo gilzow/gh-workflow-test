@@ -6,7 +6,7 @@ on:
 
 jobs:
   add-prose-label:
-    if: ! contains(github.event.pull_request.labels.*.name, 'markdown/prose')
+    if: !(contains(github.event.pull_request.labels.*.name, 'markdown/prose'))
     runs-on: ubuntu-latest
     steps:
       - name: Add prose label
