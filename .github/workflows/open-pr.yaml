@@ -5,12 +5,11 @@ on:
     types: [opened,reopened]
 
 env:
-  LBL_MRKDWNPROSE: 'markdown/prose'
-  GH_TOKEN: ${{ github.token }}
+  GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
 jobs:
   add-prose-label:
-    if: ${{ !(contains(github.event.pull_request.labels.*.name, 'markdown/prose')) }}
+    if: ${{ !(contains(github.event.pull_request.labels.*.name, ${{ vars.LBL_MRKDWNPROSE }} )) }}
     runs-on: ubuntu-latest
     steps:
       - name: Get repo
@@ -20,14 +19,14 @@ jobs:
       - name: Verify label exists
         shell: bash
         run: |
-          if [[ "${{ env.LBL_MRKDWNPROSE }}" != $(gh label list --search "${{ env.LBL_MRKDWNPROSE }}" --json name -q '.[] | .name') ]]; then
-            echo "Label ${{ env.LBL_MRKDOWNPROSE }} doesn't exist so I need to create it."
-            gh label create "${{ env.LBL_MRKDOWNPROSE }}"
+          if [[ "${{ vars.LBL_MRKDWNPROSE }}" != $(gh label list --search "${{ vars.LBL_MRKDWNPROSE }}" --json name -q '.[] | .name') ]]; then
+            echo "Label ${{ vars.LBL_MRKDOWNPROSE }} doesn't exist so I need to create it."
+            gh label create "${{ vars.LBL_MRKDOWNPROSE }}"
           else
-            echo "Label ${{ env.LBL_MRKDOWNPROSE }} already exists so no need to create it."
+            echo "Label ${{ vars.LBL_MRKDOWNPROSE }} already exists so no need to create it."
           fi
       - name: Add prose label
         shell: bash
         run: |
-          gh pr edit ${{ github.event.pull_request.number }} --add-label "${{ env.LBL_MRKDWNPROSE }}"
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "${{ vars.LBL_MRKDWNPROSE }}"
 
