@@ -20,10 +20,10 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ vars.LBL_MRKDWNPROSE }}" != $(gh label list --search "${{ vars.LBL_MRKDWNPROSE }}" --json name -q '.[] | .name') ]]; then
-            echo "Label ${{ vars.LBL_MRKDOWNPROSE }} doesn't exist so I need to create it."
-            gh label create "${{ vars.LBL_MRKDOWNPROSE }}"
+            echo "Label ${{ vars.LBL_MRKDWNPROSE }} doesn't exist so I need to create it."
+            gh label create "${{ vars.LBL_MRKDWNPROSE }}"
           else
-            echo "Label ${{ vars.LBL_MRKDOWNPROSE }} already exists so no need to create it."
+            echo "Label ${{ vars.LBL_MRKDWNPROSE }} already exists so no need to create it."
           fi
       - name: Add prose label
         shell: bash
