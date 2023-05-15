@@ -9,7 +9,7 @@ env:
 
 jobs:
   add-prose-label:
-    if: ${{ !(contains(github.event.pull_request.labels.*.name, ${{ vars.LBL_MRKDWNPROSE }} )) }}
+    if: ${{ !(contains(github.event.pull_request.labels.*.name, vars.LBL_MRKDWNPROSE )) }}
     runs-on: ubuntu-latest
     steps:
       - name: Get repo
