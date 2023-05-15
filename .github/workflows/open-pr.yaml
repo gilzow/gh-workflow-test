@@ -12,6 +12,10 @@ jobs:
     if: ${{ !(contains(github.event.pull_request.labels.*.name, 'markdown/prose')) }}
     runs-on: ubuntu-latest
     steps:
+      - name: Get repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Add prose label
         shell: bash
         env:
