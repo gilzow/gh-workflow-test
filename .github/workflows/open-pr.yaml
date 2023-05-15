@@ -1,0 +1,15 @@
+name: Add markdown prose labels
+
+on:
+  pull_request:
+    types: [opened,reopened]
+
+jobs:
+  add-prose-label:
+    if: ! contains(github.event.pull_request.labels.*.name, 'markdown/prose')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add prose label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: markdown/prose
