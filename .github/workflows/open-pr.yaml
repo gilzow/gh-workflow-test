@@ -9,8 +9,6 @@ env:
 
 jobs:
   add-prose-label:
-    env:
-      LBL_MRKDOWNPROSE: ${{ env.LBL_MRKDOWNPROSE }}
     if: ${{ !(contains(github.event.pull_request.labels.*.name, 'markdown/prose')) }}
     runs-on: ubuntu-latest
     steps:
