@@ -4,18 +4,20 @@ on:
   pull_request:
     types: [opened,reopened]
 
+env:
+  LBL_MRKDWNPROSE: 'markdown/prose'
+
 jobs:
   add-prose-label:
+    env:
+      LBL_MRKDOWNPROSE: ${{ env.LBL_MRKDOWNPROSE }}
     if: ${{ !(contains(github.event.pull_request.labels.*.name, 'markdown/prose')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Add prose label
-        uses: actions/github-script@v6
-        with:
-          script: | 
-            github.rest.issues.addLabels({
-              issue_number: ${{ github.event.pull_request.number }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              label: ["markdown/prose"]
-            })
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "${{ env.LBL_MRKDWNPROSE }}"
+
