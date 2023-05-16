@@ -1,15 +1,21 @@
 name: Add markdown prose labels
 
 on:
-  pull_request:
-    types: [opened,reopened]
+  pull_request_target:
+    branches: [main]
+    types: [labeled,opened,reopened,synchronize]
 
 env:
   GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
 jobs:
   add-prose-label:
-    if: ${{ !(contains(github.event.pull_request.labels.*.name, vars.LBL_MRKDWNPROSE )) }}
+    if: >-
+      (
+        github.event.action == 'opened' ||
+        github.event.action == 'reopened'
+      ) && 
+      !(contains(github.event.pull_request.labels.*.name, vars.LBL_MRKDWNPROSE ))
     runs-on: ubuntu-latest
     steps:
       - name: Get repo
@@ -30,3 +36,10 @@ jobs:
         run: |
           gh pr edit ${{ github.event.pull_request.number }} --add-label "${{ vars.LBL_MRKDWNPROSE }}"
 
+  always-run:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output event action
+        run: |
+          echo "The event action is ${{ github.event.action }}"
