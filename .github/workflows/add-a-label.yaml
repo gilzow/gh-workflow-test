@@ -1,0 +1,31 @@
+on:
+  workflow_dispatch:
+    inputs:
+      pr-or-issue:
+        description: 'Pull Request or Issue?'
+        required: true
+        type: choice
+        options:
+          - Pull Request
+          - Issue
+      item-number:
+        description: 'Pull Request/Issue Number'
+        required: true
+        type: string
+
+      label:
+        description: 'Label you want to add.'
+        type: string
+        required: true
+
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Add label via action'
+        uses: platformsh/gha-add-label@main
+        with:
+            issue-type: ${{ inputs.pr-or-issue }}
+            number: ${{ inputs.item-number }}
+            github-token: ${{ $GITHUB_TOKEN }}
+            label: ${{ inputs.label }}
