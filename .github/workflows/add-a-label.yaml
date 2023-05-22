@@ -27,5 +27,5 @@ jobs:
         with:
             issue-type: ${{ inputs.pr-or-issue }}
             number: ${{ inputs.item-number }}
-            github-token: ${{ secrets.WORKFLOW_TOKEN }}
+            github-token: ${{ secrets.LABEL_TOKEN }}
             label: ${{ inputs.label }}
