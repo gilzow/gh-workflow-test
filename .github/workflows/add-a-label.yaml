@@ -9,7 +9,7 @@ on:
           - Pull Request
           - Issue
       item-number:
-        description: 'Pull Request/Issue Number'
+        description: 'Pull Request/Issue Number or URL'
         required: true
         type: string
 
@@ -26,6 +26,6 @@ jobs:
         uses: platformsh/gha-add-label@main
         with:
             issue-type: ${{ inputs.pr-or-issue }}
-            number: ${{ inputs.item-number }}
+            identifier: ${{ inputs.item-number }}
             github-token: ${{ secrets.LABEL_TOKEN }}
             label: ${{ inputs.label }}
