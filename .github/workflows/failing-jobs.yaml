@@ -1,0 +1,34 @@
+on:
+  workflow_dispatch:
+#    inputs:
+#      pr-or-issue:
+#        description: 'Pull Request or Issue?'
+#        required: true
+#        type: choice
+#        options:
+#          - Pull Request
+#          - Issue
+#      item-number:
+#        description: 'Pull Request/Issue Number or URL'
+#        required: true
+#        type: string
+#
+#      label:
+#        description: 'Label you want to add.'
+#        type: string
+#        required: true
+
+jobs:
+  run1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Add label via action'
+        run: echo "::error::i will now fail?" && exit 1
+
+  run2:
+    runs-on: ubuntu-latest
+    needs: run1
+    steps:
+      - name: Step 2 of 2
+        run:
+          echo "::notice::Hello from job 2"
