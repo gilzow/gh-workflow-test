@@ -45,7 +45,13 @@ jobs:
         id: run-link-checker
         shell: bash
         run: |
-          linkchecker ${{ inputs.url }} -F xml/utf_8/brokenlinks.xml
+          continue="no"
+          # if linkchecker exits with a non-zero then it means broken links were found. 
+          if [ ! $(linkchecker ${{ inputs.url }} -F xml/utf_8/brokenlinks.xml) ]; then
+            continue="yes"
+          fi
+          
+          echo "continue=${continue}" >> $GITHUB_OUTPUT
 
 #      - name: convert XML to JSON
 #        id: convert-xml-to-json
@@ -94,12 +100,18 @@ jobs:
 #          fi
 
       - name: Convert xml to markdown
+        if: steps.run-link-checker.outputs.continue == 'yes'
         run: |
           python3 xmlTomd.py brokenlinks.xml > broken_links.md
 
+      - name: Report no broken links
+        if: steps.run-link-checker.outputs.continue == 'no'
+        run: |
+          echo "::notice::No broken links were detected"
+
       - name: Create issue from Markdown file
         id: create-issue
-        if: ${{ always() }}
+        if: steps.run-link-checker.outputs.continue == 'yes'
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: ":bug: Broken links"
