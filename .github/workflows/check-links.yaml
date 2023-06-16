@@ -47,7 +47,9 @@ jobs:
         run: |
           continue="no"
           # if linkchecker exits with a non-zero then it means broken links were found. 
-          if [ ! $(linkchecker ${{ inputs.url }} -F xml/utf_8/brokenlinks.xml) ]; then
+          scan=$(linkchecker ${{ inputs.url }} -F xml/utf_8/brokenlinks.xml)
+          result=$?
+          if [[ $result -ne 0 ]]; then
             continue="yes"
           fi
           
