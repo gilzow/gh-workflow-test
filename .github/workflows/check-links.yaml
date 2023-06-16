@@ -116,8 +116,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            var fs = require('fs');
+            var bodyMsg = fs.readFileSync('broken_links.md','utf8');
             failMsg = 'Broken links detected'
-            bodyMsg=broken_links.md
+
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
