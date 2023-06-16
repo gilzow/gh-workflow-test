@@ -43,17 +43,16 @@ jobs:
 
       - name: Run linkchecker
         id: run-link-checker
+        continue-on-error: true
         shell: bash
         run: |
-          continue="no"
+          echo "::notice::Scanning ${{ inputs.url }} for broken links."
           # if linkchecker exits with a non-zero then it means broken links were found. 
           scan=$(linkchecker ${{ inputs.url }} -F xml/utf_8/brokenlinks.xml)
           result=$?
           if [[ $result -ne 0 ]]; then
-            continue="yes"
+            echo "::notice::Broken links detected."
           fi
-          
-          echo "continue=${continue}" >> $GITHUB_OUTPUT
 
 #      - name: convert XML to JSON
 #        id: convert-xml-to-json
@@ -102,12 +101,12 @@ jobs:
 #          fi
 
       - name: Convert xml to markdown
-        if: steps.run-link-checker.outputs.continue == 'yes'
+        if: ${{ steps.run-link-checker.outcome == 'failure' }}
         run: |
           python3 xmlTomd.py brokenlinks.xml > broken_links.md
 
       - name: Report no broken links
-        if: steps.run-link-checker.outputs.continue == 'no'
+        if: ${{ steps.run-link-checker.outcome == 'success' }}
         run: |
           echo "::notice::No broken links were detected"
 
