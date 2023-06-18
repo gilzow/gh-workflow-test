@@ -32,15 +32,6 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: 18
-
-#      - name: install xml to json converter
-#        id: install-csvtojson
-#        run: |
-#          npm install -g xml2json-cli
-
       - name: Run linkchecker
         id: run-link-checker
         continue-on-error: true
@@ -54,51 +45,6 @@ jobs:
             echo "::notice::Broken links detected."
           fi
 
-#      - name: convert XML to JSON
-#        id: convert-xml-to-json
-#        shell: bash
-#        run: |
-#          xml2json carwash.xml carwash.json
-
-#      - name: Create Markdown file of broken links
-#        if: ${{ always() }}
-#        run: |
-#          data=broken_links.json
-#
-#          # Get length of broken links array
-#          eval "$( jq -r '@sh "urls_length=\(.|length)"' "$data" )"
-#
-#          # Check if any links are broken
-#          if [ -z "$urls_length" ]; then
-#            ":tada: There are no broken links! :tada:" > broken_links.md
-#          else
-#            echo -e "The following pages had broken links to check and possibly fix:\n" > broken_links.md
-#
-#            # Loop through the broken URLs to create items
-#            for (( i = 0; i < urls_length; ++i )); do
-#              unset location
-#              unset broken_links
-#              unset error
-#
-#              # Get the location where the broken link was found
-#              eval "$(
-#                  jq -r --argjson i "$i" '
-#                      .[$i] |
-#                      @sh "location=\(.url)"' "$data"
-#              )"
-#              echo "- $location" >> broken_links.md
-#
-#              # Loop through the broken links
-#              jq -r --argjson i "$i" '.[$i] ' "$data" |
-#              # Get the specific broken link and its error
-#              jq -r '.links[] | (.url, .error)' |
-#              while IFS= read -r url ; do
-#                  IFS= read -r error
-#                  # Output that as a checklist item
-#                  echo "  - [ ] $error: $url" >> broken_links.md
-#              done
-#            done
-#          fi
 
       - name: Convert xml to markdown
         if: ${{ steps.run-link-checker.outcome == 'failure' }}
@@ -125,5 +71,6 @@ jobs:
               repo: context.repo.repo,
               title: failMsg,
               body: bodyMsg,
+              labels: ['broken-links'],
             })
 
