@@ -26,7 +26,7 @@ jobs:
       - name: checkout xml to markdown
         uses: actions/checkout@v3
         with:
-          repository: gilzow/XML-to-Markdown-Parser
+          repository: platformsh/linkchecker-xml2md
 
       - name: install-parser
         run: |
