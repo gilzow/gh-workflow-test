@@ -1,0 +1,29 @@
+on:
+  workflow_dispatch:
+    inputs:
+      baseline-url:
+        description: 'production url'
+        required: true
+      test-url:
+        description: 'development url'
+        required: true
+
+
+jobs:
+  # !!!! WARNING !!!!
+  # If for some reason this job id needs to change, you'll need to update the value for env:RW_PRENV_JOBID in autopr.yaml
+  TestPrEnvironment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Visual Regression Testing'
+        id: test-environment
+        uses: platformsh/gha-visual-regression-testing@main
+        with:
+          baseline_url: ${{ inputs.baseline-url }}
+          test_url: ${{ inputs.test-url }}
+          report_results: true
+          # often the cert provisioning hasn't completed for a PR environment before we begin testing. This causes curl
+          # to error with an exit code of 60
+          test_url_insecure: true
+          test_url_response: ${{ vars.URL_RESPONSE }}
+          baseline_url_response: ${{ vars.URL_RESPONSE }}
